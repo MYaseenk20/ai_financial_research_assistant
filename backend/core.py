@@ -7,19 +7,14 @@ from langgraph.graph import StateGraph
 
 load_dotenv()
 import os
-import tempfile
-from typing import Optional, TypedDict
+from typing import TypedDict
 
 from langchain_tavily import TavilySearch
 from langchain_community.vectorstores import FAISS
-from langchain_core.vectorstores import VectorStoreRetriever
-from langchain_google_vertexai import ChatVertexAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-from langchain_google_vertexai import VertexAIEmbeddings
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
-from langchain_community.document_loaders import PyPDFLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+
 FAISS_INDEX_PATH = r"..\docs\faiss_index"
 
 llm = ChatGoogleGenerativeAI(
