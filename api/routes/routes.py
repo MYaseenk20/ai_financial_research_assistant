@@ -1,12 +1,13 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api import service
 from api.Database import get_db
 from api.Dependencies import get_current_user
-from api.Schemas import UserOut, UserRegister, UserLogin, Token
+from api.Schemas import UserOut, UserRegister, UserLogin, Token, ReportResultOut
 from api.models import User
+from backend.core import build_graph, AgentState
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -44,3 +45,23 @@ async def login(payload: OAuth2PasswordRequestForm = Depends(), db: AsyncSession
 async def me(current_user: User = Depends(get_current_user)):
     """Return the currently authenticated user."""
     return current_user
+
+@router.get("/analyze", response_model=ReportResultOut)
+async def analyze_report(company: str= Query(...,description="Company name to analyze"),current_user: User = Depends(get_current_user)):
+    """Analyze a Company report."""
+    graph = build_graph()
+
+    initial_state: AgentState = {
+        "query": f"Analyze {company} for investment",
+        "company": company,
+        "research_result": "",
+        "rag_result": "",
+        "risk_result": "",
+        "final_result": "",
+        "next": "",
+    }
+    final_state = await graph.ainvoke(initial_state)
+    result = final_state["final_result"]
+    return ReportResultOut(
+        final_result = result
+    )

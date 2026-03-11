@@ -31,9 +31,9 @@ class AnalyzeRequest(BaseModel):
 
 
 class ReportResultOut(BaseModel):
-    research_result: Optional[str]
-    rag_result:      Optional[str]
-    risk_result:     Optional[str]
+    research_result: Optional[str] = ""
+    rag_result: Optional[str] = ""
+    risk_result: Optional[str] = ""
     final_result:    Optional[str]
 
     model_config = {"from_attributes": True}
